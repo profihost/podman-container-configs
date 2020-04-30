@@ -1,0 +1,17 @@
+---
+version: "2"
+services:
+  confluence:
+    image: atlassian/confluence-server
+    container_name: confluence
+    environment:
+      - ATL_PROXY_NAME=$CONFLUENCE_DOMAIN
+      - ATL_PROXY_PORT=443
+      - ATL_TOMCAT_SCHEME=https
+      - ATL_TOMCAT_SECURE=true
+    volumes:
+      - /home/podman/data/confluence:/var/atlassian/application-data/confluence
+    ports:
+      - 192.0.2.254:8090:8090
+      - 192.0.2.254:8091:8091
+    restart: unless-stopped
