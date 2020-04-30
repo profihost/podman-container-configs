@@ -30,7 +30,8 @@ if [ $re -eq 0 ]; then
   cp nginx.conf nginx.conf.tmp
   sed -i -e "s/\\\$JIRA_DOMAIN\\\$/$JIRA_DOMAIN/g" nginx.conf.tmp
   podman unshare mv nginx.conf.tmp /home/podman/data/nginx-autoletsencrypt/nginx/site-confs/$PODNAME
-  podman restart nginx-autoletsencrypt
+  echo "restart nginx"
+  podman pod restart nginx-autoletsencrypt-pod
 
 else
   exit $re
