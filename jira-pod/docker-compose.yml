@@ -1,0 +1,16 @@
+---
+version: "2"
+services:
+  jira:
+    image: atlassian/jira-software
+    container_name: jira
+    environment:
+      - ATL_PROXY_NAME=$JIRA_DOMAIN
+      - ATL_PROXY_PORT=443
+      - ATL_TOMCAT_SCHEME=https
+      - ATL_TOMCAT_SECURE=true
+    volumes:
+      - /home/podman/data/jira:/var/atlassian/application-data/jira
+    ports:
+      - 192.0.2.254:8080:8080
+    restart: unless-stopped
