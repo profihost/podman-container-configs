@@ -1,0 +1,25 @@
+---
+version: "2"
+services:
+  gitlab-web:
+    healthcheck:
+      test: 
+        - 'NONE'
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    hostname: $SERVER_FQDN
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+          external_url 'https://$GITLAB_DOMAIN/';
+          letsencrypt['enable'] = false;
+          gitlab_rails['gitlab_shell_ssh_port'] = 2022;
+          nginx['listen_https'] = false;
+          nginx['listen_port'] = 80;
+    volumes:
+      - /home/podman/data/gitlab/config:/etc/gitlab
+      - /home/podman/data/gitlab/logs:/var/log/gitlab
+      - /home/podman/data/gitlab/data:/var/opt/gitlab
+    ports:
+      - '192.0.2.254:2080:80'
+      - '2022:22'
+    restart: unless-stopped
