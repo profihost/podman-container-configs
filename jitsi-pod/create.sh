@@ -15,6 +15,7 @@ fi
 eval mkdir -p $CONF_DIRS
 
 export SERVER_FQDN=$(hostname -f)
+export SERVER_IP=$(hostname -i)
 
 if [ -z "$JITSI_DOMAIN" ]; then
   echo "JITSI_DOMAIN must be set to the gitlab Domainname f.e. jitsi.example.ph.de" 1>&2
@@ -35,6 +36,8 @@ sed -i -e 's/HTTP_PORT=.*/HTTP_PORT=80/g' .env
 sed -i -e 's/HTTPS_PORT=.*/HTTPS_PORT=443/g' .env
 sed -i -e 's/TZ=.*/TZ=Europe\/Berlin/g' .env
 sed -i -e "s#PUBLIC_URL=.*#PUBLIC_URL=https://$JITSI_DOMAIN#g" .env
+
+echo "DOCKER_HOST_ADDRESS=${SERVER_IP}" >>.env
 
 sed -i -e 's/TZ=.*/TZ=Europe\/Berlin/g' .env
 
