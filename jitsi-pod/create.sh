@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-CONF_DIRS="/home/podman/data/jitsi/{web/letsencrypt,transcripts,prosody,jicofo,jvb,jigasi,jibri}"
+CONF_DIRS="/home/podman/data/jitsi/{web/letsencrypt,transcripts,prosody/config,prosody/prosody-plugins-custom,jicofo,jvb,jigasi,jibri}"
 
 cd $(dirname "$0")
 PODNAME=$(basename $(pwd))
@@ -30,19 +30,16 @@ cp ../docker-compose.yml .
 
 ./gen-passwords.sh
 
-sed -i -e 's#CONFIG=.*#CONFIG=/home/podman/data/jitsi/#' .env
+echo "CONFIG=/home/podman/data/jitsi/" >>.env
 
-sed -i -e 's/HTTP_PORT=.*/HTTP_PORT=80/g' .env
-sed -i -e 's/HTTPS_PORT=.*/HTTPS_PORT=443/g' .env
-sed -i -e 's/TZ=.*/TZ=Europe\/Berlin/g' .env
-sed -i -e "s#PUBLIC_URL=.*#PUBLIC_URL=https://$JITSI_DOMAIN#g" .env
-
+echo "HTTP_PORT=80" >>.env
+echo "HTTPS_PORT=443" >>.env
+echo "TZ=Europe/Berlin" >>.env
+echo "PUBLIC_URL=https://$JITSI_DOMAIN" >>.env
 echo "DOCKER_HOST_ADDRESS=${SERVER_IP}" >>.env
 
-sed -i -e 's/TZ=.*/TZ=Europe\/Berlin/g' .env
-
-sed -i -e 's/#DISABLE_HTTPS=.*/DISABLE_HTTPS=1/g' .env
-sed -i -e 's/#ENABLE_HTTP_REDIRECT=.*/ENABLE_HTTP_REDIRECT=0/g' .env
+echo "DISABLE_HTTPS=1" >>.env
+echo "ENABLE_HTTP_REDIRECT=0" >>.env
 
 podman-compose up -d
 re=$?

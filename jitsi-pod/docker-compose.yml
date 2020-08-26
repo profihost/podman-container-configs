@@ -3,7 +3,7 @@ version: '3'
 services:
     # Frontend
     web:
-        image: jitsi/web
+        image: jitsi/web:latest
         ports:
             - '192.0.2.254:10080:80'
         volumes:
@@ -30,6 +30,7 @@ services:
             - XMPP_MUC_DOMAIN
             - XMPP_RECORDER_DOMAIN
             - ETHERPAD_URL_BASE
+            - ETHERPAD_PUBLIC_URL
             - TZ
             - JIBRI_BREWERY_MUC
             - JIBRI_PENDING_TIMEOUT
@@ -47,19 +48,21 @@ services:
 
     # XMPP server
     prosody:
-        image: jitsi/prosody
+        image: jitsi/prosody:latest
         expose:
             - '5222'
             - '5347'
             - '5280'
         volumes:
-            - ${CONFIG}/prosody:/config:Z
+            - ${CONFIG}/prosody/config:/config:Z
+            - ${CONFIG}/prosody/prosody-plugins-custom:/prosody-plugins-custom:Z
         env_file:
             - ./.env
         environment:
             - AUTH_TYPE
             - ENABLE_AUTH
             - ENABLE_GUESTS
+            - ENABLE_LOBBY
             - GLOBAL_MODULES
             - GLOBAL_CONFIG
             - LDAP_URL
@@ -112,16 +115,18 @@ services:
 
     # Focus component
     jicofo:
-        image: jitsi/jicofo
+        image: jitsi/jicofo:latest
         volumes:
             - ${CONFIG}/jicofo:/config:Z
         env_file:
             - ./.env
         environment:
+            - AUTH_TYPE
             - ENABLE_AUTH
             - XMPP_DOMAIN
             - XMPP_AUTH_DOMAIN
             - XMPP_INTERNAL_MUC_DOMAIN
+            - XMPP_MUC_DOMAIN
             - XMPP_SERVER
             - JICOFO_COMPONENT_SECRET
             - JICOFO_AUTH_USER
@@ -140,7 +145,7 @@ services:
 
     # Video bridge
     jvb:
-        image: jitsi/jvb
+        image: jitsi/jvb:latest
         ports:
             - '${DOCKER_HOST_ADDRESS}:${JVB_PORT}:${JVB_PORT}/udp'
             - '${DOCKER_HOST_ADDRESS}:${JVB_TCP_PORT}:${JVB_TCP_PORT}'
