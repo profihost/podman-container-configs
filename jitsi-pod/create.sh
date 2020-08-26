@@ -41,6 +41,8 @@ echo "DOCKER_HOST_ADDRESS=${SERVER_IP}" >>.env
 echo "DISABLE_HTTPS=1" >>.env
 echo "ENABLE_HTTP_REDIRECT=0" >>.env
 
+test -e "../.myenv" && (echo "adding additional ENV settins" && cat ../.myenv | tee -a .env)
+
 podman-compose up -d
 re=$?
 if [ $re -eq 0 ]; then
