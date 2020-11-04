@@ -25,23 +25,29 @@ fi
 export JITSI_DOMAIN
 
 cd docker-jitsi-meet
-cp env.example .env
+
+if [ -e ".env" ]; then
+	echo ".env file already exists. File will be reused. For a fresh install delete .env File"
+	read -p "Press enter to continue or STRG + C to abort" || exit 1
+else
+	cp env.example .env
+	./gen-passwords.sh
+
+	echo "CONFIG=/home/podman/data/jitsi/" >>.env
+	
+	echo "HTTP_PORT=80" >>.env
+	echo "HTTPS_PORT=443" >>.env
+	echo "TZ=Europe/Berlin" >>.env
+	echo "PUBLIC_URL=https://$JITSI_DOMAIN" >>.env
+	echo "DOCKER_HOST_ADDRESS=${SERVER_IP}" >>.env
+	
+	echo "DISABLE_HTTPS=1" >>.env
+	echo "ENABLE_HTTP_REDIRECT=0" >>.env
+	
+	test -e "../.myenv" && (echo "adding additional ENV settins" && cat ../.myenv | tee -a .env)
+fi
+
 cp ../docker-compose.yml .
-
-./gen-passwords.sh
-
-echo "CONFIG=/home/podman/data/jitsi/" >>.env
-
-echo "HTTP_PORT=80" >>.env
-echo "HTTPS_PORT=443" >>.env
-echo "TZ=Europe/Berlin" >>.env
-echo "PUBLIC_URL=https://$JITSI_DOMAIN" >>.env
-echo "DOCKER_HOST_ADDRESS=${SERVER_IP}" >>.env
-
-echo "DISABLE_HTTPS=1" >>.env
-echo "ENABLE_HTTP_REDIRECT=0" >>.env
-
-test -e "../.myenv" && (echo "adding additional ENV settins" && cat ../.myenv | tee -a .env)
 
 podman-compose up -d
 re=$?
