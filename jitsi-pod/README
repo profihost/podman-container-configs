@@ -1,2 +1,7 @@
 Source: https://github.com/jitsi/docker-jitsi-meet
 Doc: https://github.com/jitsi/docker-jitsi-meet
+
+For additional settings you can use the file .myenv.
+
+All available settings are documented here:
+https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker
