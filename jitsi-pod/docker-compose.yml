@@ -3,7 +3,7 @@ version: '3'
 services:
     # Frontend
     web:
-        image: jitsi/web:stable-5076
+        image: jitsi/web:stable-5142
         ports:
             - '192.0.2.254:10080:80'
         volumes:
@@ -24,6 +24,7 @@ services:
             - ANALYTICS_SCRIPT_URLS
             - ANALYTICS_WHITELISTED_EVENTS
             - BRIDGE_CHANNEL
+            - BRANDING_DATA_URL
             - CALLSTATS_CUSTOM_SCRIPT_URL
             - CALLSTATS_ID
             - CALLSTATS_SECRET
@@ -49,6 +50,7 @@ services:
             - ENABLE_LIPSYNC
             - ENABLE_NO_AUDIO_DETECTION
             - ENABLE_P2P
+            - ENABLE_PREJOIN_PAGE
             - ENABLE_RECORDING
             - ENABLE_REMB
             - ENABLE_REQUIRE_DISPLAY_NAME
@@ -66,20 +68,21 @@ services:
             - GOOGLE_API_APP_CLIENT_ID
             - INVITE_SERVICE_URL
             - JICOFO_AUTH_USER
+            - MATOMO_ENDPOINT
+            - MATOMO_SITE_ID
             - MICROSOFT_API_APP_CLIENT_ID
             - NGINX_RESOLVER
-            - P2P_USE_STUN_TURN
             - PEOPLE_SEARCH_URL
             - RESOLUTION
             - RESOLUTION_MIN
             - RESOLUTION_WIDTH
             - RESOLUTION_WIDTH_MIN
+            - START_AUDIO_ONLY
             - START_AUDIO_MUTED
             - START_BITRATE
             - START_VIDEO_MUTED
             - TESTING_CAP_SCREENSHARE_BITRATE
             - TESTING_OCTO_PROBABILITY
-            - USE_STUN_TURN
             - XMPP_AUTH_DOMAIN
             - XMPP_BOSH_URL_BASE
             - XMPP_DOMAIN
@@ -95,7 +98,7 @@ services:
 
     # XMPP server
     prosody:
-        image: jitsi/prosody:stable-5076
+        image: jitsi/prosody:stable-5142
         expose:
             - '5222'
             - '5347'
@@ -162,7 +165,7 @@ services:
 
     # Focus component
     jicofo:
-        image: jitsi/jicofo:stable-5076
+        image: jitsi/jicofo:stable-5142
         volumes:
             - ${CONFIG}/jicofo:/config:Z
         env_file:
@@ -192,7 +195,7 @@ services:
 
     # Video bridge
     jvb:
-        image: jitsi/jvb:stable-5076
+        image: jitsi/jvb:stable-5142
         ports:
             - '${DOCKER_HOST_ADDRESS}:${JVB_PORT}:${JVB_PORT}/udp'
             - '${DOCKER_HOST_ADDRESS}:${JVB_TCP_PORT}:${JVB_TCP_PORT}'
@@ -211,8 +214,11 @@ services:
             - JVB_PORT
             - JVB_TCP_HARVESTER_DISABLED
             - JVB_TCP_PORT
+            - JVB_TCP_MAPPED_PORT
             - JVB_STUN_SERVERS
             - JVB_ENABLE_APIS
+            - JVB_WS_DOMAIN
+            - JVB_WS_SERVER_ID
             - PUBLIC_URL
             - TZ
         depends_on:
