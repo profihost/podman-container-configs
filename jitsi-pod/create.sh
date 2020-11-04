@@ -6,8 +6,8 @@ CONF_DIRS="/home/podman/data/jitsi/{web/letsencrypt,transcripts,prosody/config,p
 cd $(dirname "$0")
 PODNAME=$(basename $(pwd))
 
-if podman pod exists "$PODNAME"; then
-  echo "pod $PODNAME already exists" 1>&2
+if podman pod exists "docker-$PODNAME"; then
+  echo "pod docker-$PODNAME already exists" 1>&2
   exit 1
 fi
 
