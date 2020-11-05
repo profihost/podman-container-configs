@@ -1,8 +1,7 @@
----
 version: "2"
 services:
   web:
-    image: linuxserver/letsencrypt
+    image: linuxserver/swag:latest
     container_name: nginx-autoletsencrypt
     cap_add:
       - NET_ADMIN
